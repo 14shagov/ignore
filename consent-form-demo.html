@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Форма регистрации — пример реализации согласия по 152-ФЗ</title>
+<style>
+  :root {
+    --ink: #1c1c1a;
+    --paper: #faf9f6;
+    --line: #d8d5cc;
+    --accent: #2f5233;
+    --accent-soft: #eef2ec;
+    --error: #a6402f;
+    --muted: #6b6a63;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Georgia", "Times New Roman", serif;
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px;
+    line-height: 1.5;
+  }
+  .wrap { width: 100%; max-width: 640px; }
+  .note {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    border-left: 3px solid var(--accent);
+    padding: 10px 14px;
+    margin-bottom: 28px;
+    background: var(--accent-soft);
+  }
+  .card {
+    border: 1px solid var(--line);
+    padding: 40px 36px;
+    background: #fff;
+  }
+  h1 {
+    font-size: 22px;
+    margin: 0 0 6px;
+    font-weight: 600;
+  }
+  .sub {
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0 0 28px;
+  }
+  label.field {
+    display: block;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 18px;
+  }
+  label.field span { display: block; margin-bottom: 6px; }
+  input[type="text"], input[type="email"], input[type="tel"] {
+    width: 100%;
+    padding: 10px 12px;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+  }
+  input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  fieldset {
+    border: none;
+    padding: 0;
+    margin: 24px 0 8px;
+  }
+  .consent-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13.5px;
+    color: var(--ink);
+    padding: 14px;
+    border: 1px solid var(--line);
+    background: var(--accent-soft);
+  }
+  .consent-row input[type="checkbox"] {
+    margin-top: 3px;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+    flex-shrink: 0;
+  }
+  .consent-row a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .consent-row a:hover { color: var(--ink); }
+
+  .err {
+    display: none;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 12.5px;
+    color: var(--error);
+    margin-top: 6px;
+  }
+  .err.show { display: block; }
+
+  button {
+    margin-top: 24px;
+    width: 100%;
+    padding: 13px;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+  }
+  button:hover { background: #24401f; }
+  button:disabled { background: #a9b3a4; cursor: not-allowed; }
+
+  .status {
+    display: none;
+    margin-top: 16px;
+    font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    padding: 12px 14px;
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+  }
+  .status.show { display: block; }
+  .status code {
+    display: block;
+    margin-top: 8px;
+    font-size: 11.5px;
+    white-space: pre-wrap;
+    color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="note">
+    Демонстрационный пример формы регистрации для сайта ООО «Боба». Показывает, как разделить ссылки на «Согласие на обработку персональных данных» и «Политику обработки персональных данных» в одной формулировке рядом с чекбоксом — в соответствии с ч. 1 ст. 9 152-ФЗ (в ред. № 156-ФЗ от 24.06.2025).
+  </div>
+
+  <div class="card">
+    <h1>Регистрация</h1>
+    <p class="sub">Создайте аккаунт, чтобы начать пользоваться сервисом</p>
+
+    <form id="regForm" novalidate>
+      <label class="field">
+        <span>Имя</span>
+        <input type="text" name="name" required>
+      </label>
+      <label class="field">
+        <span>Email</span>
+        <input type="email" name="email" required>
+      </label>
+      <label class="field">
+        <span>Телефон</span>
+        <input type="tel" name="phone" required>
+      </label>
+
+      <fieldset>
+        <div class="consent-row">
+          <input type="checkbox" id="consentCheck" name="consent">
+          <label for="consentCheck">
+            Нажимая кнопку «Зарегистрироваться», я даю
+            <a href="/consent.pdf" target="_blank" rel="noopener">Согласие на обработку персональных данных</a>
+            и подтверждаю, что ознакомлен(а) с
+            <a href="/privacy-policy.pdf" target="_blank" rel="noopener">Политикой обработки персональных данных</a>.
+          </label>
+        </div>
+        <div class="err" id="consentErr">Чтобы продолжить, необходимо подтвердить согласие.</div>
+      </fieldset>
+
+      <button type="submit">Зарегистрироваться</button>
+
+      <div class="status" id="status"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('regForm');
+  const consentCheck = document.getElementById('consentCheck');
+  const consentErr = document.getElementById('consentErr');
+  const status = document.getElementById('status');
+
+  // In-memory demo store (no browser storage per platform rules)
+  const consentLog = [];
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    status.classList.remove('show');
+
+    if (!consentCheck.checked) {
+      consentErr.classList.add('show');
+      consentCheck.focus();
+      return;
+    }
+    consentErr.classList.remove('show');
+
+    // Пример фиксации факта согласия (см. раздел 2 документа "Согласие"):
+    // дата/время, версия документа, IP — на бэкенде реальной системы.
+    const record = {
+      timestamp: new Date().toISOString(),
+      email: form.email.value,
+      consent_version: "v1.0",
+      policy_version: "v1.0",
+      consent_given: true,
+    };
+    consentLog.push(record);
+
+    status.classList.add('show');
+    status.innerHTML = 'Согласие зафиксировано. Пример записи, которая в реальной системе сохраняется в базе данных Оператора:' +
+      '<code>' + JSON.stringify(record, null, 2) + '</code>';
+  });
+</script>
+</body>
+</html>
